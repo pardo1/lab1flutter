@@ -4,21 +4,24 @@ import 'package:flutter/material.dart';
 class ValueIncrementer extends StatelessWidget {
   final String title;
   final int value;
-  final Function() onTapMinus;
-  final Function() onTapPlus;
-  const ValueIncrementer(
-      {super.key,
-      required this.title,
-      required this.value,
-      required this.onTapMinus,
-      required this.onTapPlus});
+  final VoidCallback onTapMinus;
+  final VoidCallback onTapPlus;
+
+  const ValueIncrementer({
+    super.key,
+    required this.title,
+    required this.value,
+    required this.onTapMinus,
+    required this.onTapPlus,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(16))),
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(16)),
+      ),
       width: 175,
       height: 220,
       child: Center(
@@ -36,26 +39,23 @@ class ValueIncrementer extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                DecoratedIconButton(
-                  size: 40,
-                  isSelected: true,
-                  onTap: onTapMinus,
-                  icon: Icons.remove,
-                ),
-                const SizedBox(
-                  width: 40,
-                ),
-                DecoratedIconButton(
-                  size: 40,
-                  isSelected: true,
-                  onTap: onTapPlus,
-                  icon: Icons.add,
-                ),
+                _buildIconButton(onTapMinus, Icons.remove),
+                const SizedBox(width: 40),
+                _buildIconButton(onTapPlus, Icons.add),
               ],
-            )
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildIconButton(VoidCallback onTap, IconData icon) {
+    return DecoratedIconButton(
+      size: 40,
+      isSelected: true,
+      onTap: onTap,
+      icon: icon,
     );
   }
 }

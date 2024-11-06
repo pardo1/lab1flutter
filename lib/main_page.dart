@@ -14,18 +14,17 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final AppController controller = Get.put(AppController());
-  final textController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  final TextEditingController textController = TextEditingController();
 
   @override
   void dispose() {
     Get.delete<AppController>();
     textController.dispose();
     super.dispose();
+  }
+
+  double _getButtonWidth(BoxConstraints constraints) {
+    return constraints.maxWidth < 400 ? constraints.maxWidth / 2 - 30 : 175;
   }
 
   @override
@@ -64,9 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   const SizedBox(height: 20),
                   LayoutBuilder(
                     builder: (context, constraints) {
-                      double buttonWidth = constraints.maxWidth < 400
-                          ? constraints.maxWidth / 2 - 30
-                          : 175;
+                      double buttonWidth = _getButtonWidth(constraints);
 
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -77,11 +74,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               height: 50,
                               icon: Icons.male,
                               text: 'Male',
-                              onTap: () {
-                                controller.gender.value = 'male';
-                              },
-                              isSelected:
-                              controller.gender.value == 'male',
+                              onTap: () => controller.gender.value = 'male',
+                              isSelected: controller.gender.value == 'male',
                             ),
                           ),
                           const SizedBox(width: 20),
@@ -91,11 +85,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               height: 50,
                               icon: Icons.female,
                               text: 'Female',
-                              onTap: () {
-                                controller.gender.value = 'female';
-                              },
-                              isSelected:
-                              controller.gender.value == 'female',
+                              onTap: () => controller.gender.value = 'female',
+                              isSelected: controller.gender.value == 'female',
                             ),
                           ),
                         ],
@@ -110,12 +101,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: ValueIncrementer(
                           title: 'Weight',
                           value: controller.weight.value,
-                          onTapMinus: () {
-                            controller.decrementWeight();
-                          },
-                          onTapPlus: () {
-                            controller.incrementWeight();
-                          },
+                          onTapMinus: controller.decrementWeight,
+                          onTapPlus: controller.incrementWeight,
                         ),
                       ),
                       const SizedBox(width: 20),
@@ -123,12 +110,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: ValueIncrementer(
                           title: 'Age',
                           value: controller.age.value,
-                          onTapMinus: () {
-                            controller.decrementAge();
-                          },
-                          onTapPlus: () {
-                            controller.incrementAge();
-                          },
+                          onTapMinus: controller.decrementAge,
+                          onTapPlus: controller.incrementAge,
                         ),
                       ),
                     ],
@@ -152,15 +135,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     controller: textController,
                     keyboardType: TextInputType.phone,
                     onChanged: (value) {
-                      if (value != '') {
-                        controller.height.value = double.parse(value);
-                      } else {
-                        controller.height.value = 0;
-                      }
+                      controller.height.value =
+                      value.isNotEmpty ? double.parse(value) : 0;
                     },
-                    onTapOutside: (event) {
-                      FocusManager.instance.primaryFocus?.unfocus();
-                    },
+                    onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
                   ),
                   const SizedBox(height: 30),
                   Center(
@@ -188,10 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: double.infinity,
                     height: 50,
                     child: FilledButton(
-                      onPressed: () {
-                        controller.calculateBMI(
-                            controller.weight.value, controller.height.value);
-                      },
+                      onPressed: () => controller.calculateBMI(controller.weight.value, controller.height.value),
                       child: const Text('Calculate'),
                     ),
                   ),
